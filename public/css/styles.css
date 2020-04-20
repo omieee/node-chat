@@ -93,7 +93,15 @@ button:disabled {
     height: 100vh;
     color: white;
     background: #333744;
-    width: 225px;
+    width: 320px;
+    overflow-y: scroll
+}
+
+.right__chat__sidebar {
+    height: 100vh;
+    color: white;
+    background: #333744;
+    width: 320px;
     overflow-y: scroll
 }
 
@@ -181,3 +189,7 @@ button:disabled {
     font-weight: 300;
     padding: 12px 24px 0 24px;
 }
+video {
+    max-width: 100%;
+    width: 320px;
+  }

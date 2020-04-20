@@ -34,7 +34,7 @@ io.on('connection', (socket) => {
         /*
         This one will go to all other user other that the user itself
         */
-        socket.broadcast.to(user.roomname).emit('message', generateMessageBody("TwicaBOT",user.username + " joined room"))
+        socket.broadcast.to(user.roomname).emit('message', generateMessageBody("TwicaBOT", user.username + " joined room"))
         io.to(user.roomname).emit('userlist', {
             roomname: user.roomname,
             members: getUsersInRoom(user.roomname)
@@ -63,12 +63,36 @@ io.on('connection', (socket) => {
         io.to(user.roomname).emit('locationMessage', generateLocationMessageBody(user.username, `https://google.com/maps?q=${latlng.latitude},${latlng.longitude}`))
         callback()
     })
+
+    /*
+    *For Call
+    */
+    socket.on("call-user", (user) => {
+        socket.to(data.to).emit("call-made", {
+            offer: data.offer,
+            socket: socket.id
+        });
+    });
+
+    socket.on("make-answer", data => {
+        socket.to(data.to).emit("answer-made", {
+            socket: socket.id,
+            answer: data.answer
+        });
+    });
+
+    socket.on("reject-call", data => {
+        socket.to(data.from).emit("call-rejected", {
+            socket: socket.id
+        });
+    });
+
     /*
     *On the user whe he / she disconnects
     */
     socket.on('disconnect', () => {
         const user = removeUser(socket.id)
-        if(user) {
+        if (user) {
             io.to(user.roomname).emit('message', generateMessageBody('TwicaBOT', `${user.username} has left`))
             io.to(user.roomname).emit('userlist', {
                 roomname: user.roomname,
