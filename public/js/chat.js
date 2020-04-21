@@ -24,6 +24,11 @@ var pcConfig = {
     'iceServers': [
       {
         'urls': 'stun:stun.l.google.com:19302'
+      },
+      {
+        'urls': 'turn:turn.twicahut.com:3478?transport=tcp',
+        'credential': 'itunes_01',
+        'username': 'omieee'
       }
     ]
   }
