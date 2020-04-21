@@ -21,10 +21,17 @@ var remoteStream;
 var turnReady;
 
 var pcConfig = {
-    'iceServers': [{
+    'iceServers': [
+      {
         'urls': 'stun:stun.l.google.com:19302'
-    }]
-};
+      },
+      {
+        'urls': 'turn:turn.twicahut.com?transport=udp',
+        'credential': 'itunes_01',
+        'username': 'omieee'
+      }
+    ]
+  }
 
 // Set up audio and video regardless of what devices are present.
 var sdpConstraints = {
