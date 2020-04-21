@@ -214,9 +214,8 @@ socket.on('message-back', function(message) {
       if (!isInitiator && !isStarted) {
         maybeStart();
       }
-      pc.setRemoteDescription(new RTCSessionDescription(message)).then(function () {
-        doAnswer();
-      });
+      pc.setRemoteDescription(new RTCSessionDescription(message))
+      doAnswer()
     } else if (message.type === 'answer' && isStarted) {
       pc.setRemoteDescription(new RTCSessionDescription(message));
     } else if (message.type === 'candidate' && isStarted) {
