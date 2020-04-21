@@ -12,13 +12,14 @@ $sidebar_template = document.querySelector('#sidebar-template').innerHTML
 //Query String parse
 const { username, roomname } = Qs.parse(location.search, { ignoreQueryPrefix: true })
 
-var isChannelReady = true;
+var isChannelReady = false;
 var isInitiator = true;
 var isStarted = false;
 var localStream;
 var pc;
 var remoteStream;
 var turnReady;
+var room;
 
 var pcConfig = {
     'iceServers': [
@@ -252,6 +253,7 @@ socket.on('locationMessage', (location) => {
 })
 
 socket.on('userlist', ({ roomname, members }) => {
+    room = roomname
     const html = Mustache.render($sidebar_template, {
         roomname, members
     })
@@ -298,3 +300,30 @@ socket.emit('join', { username, roomname }, (error) => {
         location.href = 'https://twicahut.com'
     }
 })
+
+/*
+FOR CALL EVENTS
+*/
+socket.on('created', function(room) {
+    console.log('Created room ' + room);
+    isInitiator = true;
+  });
+  
+  socket.on('full', function(room) {
+    console.log('Room ' + room + ' is full');
+  });
+  
+  socket.on('join', function (room){
+    console.log('Another peer made a request to join room ' + room);
+    console.log('This peer is the initiator of room ' + room + '!');
+    isChannelReady = true;
+  });
+  
+  socket.on('joined', function(room) {
+    console.log('joined: ' + room);
+    isChannelReady = true;
+  });
+  
+  socket.on('log', function(array) {
+    console.log.apply(console, array);
+  });

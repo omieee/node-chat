@@ -79,18 +79,38 @@ io.on('connection', (socket) => {
         });
     });
 
-    socket.on("make-answer", data => {
-        socket.to(data.to).emit("answer-made", {
-            socket: socket.id,
-            answer: data.answer
-        });
-    });
-
-    socket.on("reject-call", data => {
-        socket.to(data.from).emit("call-rejected", {
-            socket: socket.id
-        });
-    });
+    ssocket.on('create or join', function(room) {
+        log('Received request to create or join room ' + room);
+    
+        var clientsInRoom = io.sockets.adapter.rooms[room];
+        var numClients = clientsInRoom ? Object.keys(clientsInRoom.sockets).length : 0;
+        log('Room ' + room + ' now has ' + numClients + ' client(s)');
+    
+        if (numClients === 0) {
+          socket.join(room);
+          log('Client ID ' + socket.id + ' created room ' + room);
+          socket.emit('created', room, socket.id);
+    
+        } else if (numClients === 1) {
+          log('Client ID ' + socket.id + ' joined room ' + room);
+          io.sockets.in(room).emit('join', room);
+          socket.join(room);
+          socket.emit('joined', room, socket.id);
+          io.sockets.in(room).emit('ready');
+        } else { // max two clients
+          socket.emit('full', room);
+        }
+      });
+      socket.on('ipaddr', function() {
+        var ifaces = os.networkInterfaces();
+        for (var dev in ifaces) {
+          ifaces[dev].forEach(function(details) {
+            if (details.family === 'IPv4' && details.address !== '127.0.0.1') {
+              socket.emit('ipaddr', details.address);
+            }
+          });
+        }
+      });
 
     /*
     *On the user whe he / she disconnects
