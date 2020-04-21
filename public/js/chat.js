@@ -14,7 +14,7 @@ const { username, roomname } = Qs.parse(location.search, { ignoreQueryPrefix: tr
 
 var isChannelReady = true;
 var isInitiator = true;
-var isStarted = true;
+var isStarted = false;
 var localStream;
 var pc;
 var remoteStream;
