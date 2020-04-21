@@ -12,9 +12,9 @@ $sidebar_template = document.querySelector('#sidebar-template').innerHTML
 //Query String parse
 const { username, roomname } = Qs.parse(location.search, { ignoreQueryPrefix: true })
 
-var isChannelReady = false;
+var isChannelReady = true;
 var isInitiator = true;
-var isStarted = false;
+var isStarted = true;
 var localStream;
 var pc;
 var remoteStream;
