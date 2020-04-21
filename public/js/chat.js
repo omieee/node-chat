@@ -26,9 +26,9 @@ var pcConfig = {
         'urls': 'stun:stun.l.google.com:19302'
       },
       {
-        'urls': 'turn:turn.twicahut.com?transport=udp',
-        'credential': 'itunes_01',
-        'username': 'omieee'
+        'urls': 'turn:computeengineondemand.appspot.com?transport=udp',
+        'credential': '4080218913',
+        'username': '41784574'
       }
     ]
   }
