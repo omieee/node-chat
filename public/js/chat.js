@@ -60,7 +60,7 @@ document.querySelector('#startcall').addEventListener('click' , () => {
 
 if (location.hostname !== 'localhost') {
     requestTurn(
-        'turn.twicahut.com'
+        'https://turn.twicahut.com'
     );
 }
 
