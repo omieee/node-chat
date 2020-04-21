@@ -19,7 +19,7 @@ var localStream;
 var pc;
 var remoteStream;
 var turnReady;
-var room;
+var room = "foo";
 
 var pcConfig = {
     'iceServers': [
@@ -253,7 +253,6 @@ socket.on('locationMessage', (location) => {
 })
 
 socket.on('userlist', ({ roomname, members }) => {
-    room = roomname
     const html = Mustache.render($sidebar_template, {
         roomname, members
     })
