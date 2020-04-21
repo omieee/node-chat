@@ -56,7 +56,7 @@ function gotStream(stream) {
 
 document.querySelector('#startcall').addEventListener('click' , () => {
     navigator.mediaDevices.getUserMedia({
-        audio: true,
+        audio: false,
         video: true
       })
       .then(gotStream)
