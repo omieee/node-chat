@@ -65,11 +65,6 @@ document.querySelector('#startcall').addEventListener('click' , () => {
       });
 })
 
-if (location.hostname !== 'localhost') {
-    requestTurn(
-        'https://turn.twicahut.com'
-    );
-}
 
 function maybeStart() {
     console.log('>>>>>>> maybeStart() ', isStarted, localStream, isChannelReady);
@@ -146,35 +141,6 @@ function onCreateSessionDescriptionError(error) {
     trace('Failed to create session description: ' + error.toString());
 }
 
-function requestTurn(turnURL) {
-    var turnExists = false;
-    for (var i in pcConfig.iceServers) {
-        if (pcConfig.iceServers[i].urls.substr(0, 5) === 'turn:') {
-            turnExists = true;
-            turnReady = true;
-            break;
-        }
-    }
-    if (!turnExists) {
-        console.log('Getting TURN server from ', turnURL);
-        // No TURN server. Get one from computeengineondemand.appspot.com:
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                var turnServer = JSON.parse(xhr.responseText);
-                console.log('Got TURN server: ', turnServer);
-                pcConfig.iceServers.push({
-                    'urls': 'turn:' + turnServer.username + '@' + turnServer.turn,
-                    'credential': turnServer.password
-                });
-                turnReady = true;
-            }
-        };
-        xhr.open('GET', turnURL, true);
-        xhr.send();
-    }
-}
-
 function handleRemoteStreamAdded(event) {
     console.log('Remote stream added.');
     remoteStream = event.stream;
@@ -247,7 +213,7 @@ socket.on('message-back', function(message) {
       if (!isInitiator && !isStarted) {
         maybeStart();
       }
-      pc.setRemoteDescription(new RTCSessionDescription(message));
+      await pc.setRemoteDescription(new RTCSessionDescription(message));
       doAnswer();
     } else if (message.type === 'answer' && isStarted) {
       pc.setRemoteDescription(new RTCSessionDescription(message));
