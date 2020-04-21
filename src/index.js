@@ -79,7 +79,7 @@ io.on('connection', (socket) => {
         });
     });
 
-    ssocket.on('create or join', function(room) {
+    socket.on('create or join', function(room) {
         log('Received request to create or join room ' + room);
     
         var clientsInRoom = io.sockets.adapter.rooms[room];
