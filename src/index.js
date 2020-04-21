@@ -67,6 +67,11 @@ io.on('connection', (socket) => {
     /*
     *For Call
     */
+    socket.on('message-for-video', function (message) {
+        console.log('Client said: ', message);
+        // for a real app, would be room-only (not broadcast)
+        socket.broadcast.emit('message-back', message);
+    });
     socket.on("call-user", (user) => {
         socket.to(data.to).emit("call-made", {
             offer: data.offer,
@@ -101,7 +106,6 @@ io.on('connection', (socket) => {
         }
     })
 })
-
 
 server.listen(port, () => {
     console.log("Server is running on port: " + port)

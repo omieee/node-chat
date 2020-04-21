@@ -56,7 +56,7 @@ function gotStream(stream) {
 
 document.querySelector('#startcall').addEventListener('click' , () => {
     navigator.mediaDevices.getUserMedia({
-        audio: false,
+        audio: true,
         video: true
       })
       .then(gotStream)
@@ -97,7 +97,7 @@ function createPeerConnection() {
         pc.onicecandidate = handleIceCandidate;
         pc.onaddstream = handleRemoteStreamAdded;
         pc.onremovestream = handleRemoteStreamRemoved;
-        console.log('OM OM Created RTCPeerConnnection');
+        console.log('Created RTCPeerConnnection');
     } catch (e) {
         console.log('Failed to create PeerConnection, exception: ' + e.message);
         alert('Cannot create RTCPeerConnection object.');
@@ -235,8 +235,33 @@ const emitMessagesForVideo = (msg) => {
 
 function sendMessage(message) {
     console.log('Client sending message: ', message);
-    socket.emit('message', message);
+    socket.emit('message-for-video', message);
 }
+
+// This client receives a message
+socket.on('message-back', function(message) {
+    console.log('Client received message:', message);
+    if (message === 'got user media') {
+      maybeStart();
+    } else if (message.type === 'offer') {
+      if (!isInitiator && !isStarted) {
+        maybeStart();
+      }
+      pc.setRemoteDescription(new RTCSessionDescription(message));
+      doAnswer();
+    } else if (message.type === 'answer' && isStarted) {
+      pc.setRemoteDescription(new RTCSessionDescription(message));
+    } else if (message.type === 'candidate' && isStarted) {
+      var candidate = new RTCIceCandidate({
+        sdpMLineIndex: message.label,
+        candidate: message.candidate
+      });
+      pc.addIceCandidate(candidate);
+    } else if (message === 'bye' && isStarted) {
+      handleRemoteHangup();
+    }
+  });
+
 
 socket.on('message', (message) => {
     console.log(message)
@@ -303,6 +328,6 @@ document.querySelector('#sendlocation').addEventListener('click', () => {
 socket.emit('join', { username, roomname }, (error) => {
     if (error) {
         alert(error)
-        location.href = ''
+        location.href = 'https://twicahut.com'
     }
 })
