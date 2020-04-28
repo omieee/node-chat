@@ -79,6 +79,7 @@ document.querySelector('#startcall').addEventListener('click' , () => {
       });
 })
 $("#ringModal").on('shown.bs.modal', function(){
+    console.log("Came Inside")
     document.querySelector('#joinCall').addEventListener('click' , () => {
         navigator.mediaDevices.getUserMedia({
             audio: true,
