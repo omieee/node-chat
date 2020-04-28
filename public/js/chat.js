@@ -58,7 +58,7 @@ function gotStream(stream) {
 }
 
 function beep() {
-    var snd = new Audio("../audio/ring.wav");  
+    var snd = new Audio("/audio/ring.wav");  
     snd.play();
 }
 
