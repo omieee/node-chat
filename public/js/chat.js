@@ -152,7 +152,6 @@ function onCreateSessionDescriptionError(error) {
 
 function handleRemoteStreamAdded(event) {
     console.log('Remote stream added.');
-    beep();
     remoteStream = event.stream;
     remoteVideo.srcObject = remoteStream;
 }
@@ -321,6 +320,7 @@ FOR CALL EVENTS
 socket.on('created', function(room) {
     console.log('Created room ' + room);
     isInitiator = true;
+    beep();
   });
   
   socket.on('full', function(room) {
