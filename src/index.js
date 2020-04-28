@@ -19,7 +19,7 @@ app.use(express.static(staticpath))
 const welcomemsg = "Welcome to twicahut"
 
 io.on('connection', (socket) => {
-    console.log("New Websocket connected!")
+    console.log("New Websocket connected!!!")
     socket.on('join', ({ username, roomname }, callback) => {
         const { error, user } = addUser({ id: socket.id, username, roomname })
         if (error) {
@@ -43,7 +43,6 @@ io.on('connection', (socket) => {
     })
 
     socket.on('sendMessage', (msg, callback) => {
-      console.log("Came here")
         filter = new FilterWords()
         if (filter.isProfane(msg)) {
             return callback("Bad words are not allowed")
