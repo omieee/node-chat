@@ -72,7 +72,7 @@ io.on('connection', (socket) => {
         // for a real app, would be room-only (not broadcast)
         socket.broadcast.emit('message-back', message);
     });
-    socket.on('create or join', function(room) {
+    socket.on('create_or_join', function(room) {
         console.log('Received request to create or join room ' + room);
         var clientsInRoom = io.sockets.adapter.rooms[room];
         var numClients = clientsInRoom ? Object.keys(clientsInRoom.sockets).length : 0;

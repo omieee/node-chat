@@ -303,7 +303,7 @@ socket.emit('join', { username, roomname }, (error) => {
 FOR CALL EVENTS
 */
 if (room !== '') {
-    socket.emit('create or join', room);
+    socket.emit('create_or_join', room);
     console.log('Attempted to create or  join room', room);
 } else {
     console.log("room", room)
