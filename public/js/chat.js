@@ -62,7 +62,7 @@ function beep() {
 
 document.querySelector('#startcall').addEventListener('click' , () => {
     navigator.mediaDevices.getUserMedia({
-        audio: false,
+        audio: true,
         video: true
       })
       .then(gotStream)
