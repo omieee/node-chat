@@ -67,7 +67,7 @@ function ringstop() {
     snd.currentTime = 0;
 }
 
-document.querySelector('#startcall').addEventListener('click' , () => {
+document.querySelectorAll('#startcall', '#joinCall').addEventListener('click' , () => {
     navigator.mediaDevices.getUserMedia({
         audio: true,
         video: true
@@ -352,3 +352,6 @@ socket.on('created', function(room) {
       ring();
       $("#ringModal").modal();
   })
+  $("#ringModal").on('hide.bs.modal', function(){
+    ringstop();
+  });
