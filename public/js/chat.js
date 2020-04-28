@@ -60,7 +60,6 @@ function gotStream(stream) {
 
 function ring() {
     snd.play();
-    $("#myModal").modal()
 }
 
 function ringstop() {
@@ -351,4 +350,5 @@ socket.on('created', function(room) {
   });
   socket.on('ring', () => {
       ring();
+      $("#myModal").modal();
   })
