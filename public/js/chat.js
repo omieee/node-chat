@@ -19,7 +19,7 @@ var localStream;
 var pc;
 var remoteStream;
 var turnReady;
-var room = "foo";
+var room = roomname;
 
 var pcConfig = {
     'iceServers': [
