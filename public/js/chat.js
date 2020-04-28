@@ -63,8 +63,11 @@ function ring() {
 }
 
 function ringstop() {
-    snd.pause();
-    snd.currentTime = 0;
+    try{
+        snd.pause();
+        snd.currentTime = 0;
+    }
+    catch {}
 }
 
 document.querySelector('#startcall').addEventListener('click' , () => {
@@ -374,4 +377,3 @@ socket.on('created', function(room) {
 $(document).on('hide.bs.modal','#ringModal', function () {
     ringstop();
 })
-rejectCall
