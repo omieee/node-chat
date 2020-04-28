@@ -350,5 +350,5 @@ socket.on('created', function(room) {
   });
   socket.on('ring', () => {
       ring();
-      $("#myModal").modal();
+      $("#ringModal").modal();
   })
