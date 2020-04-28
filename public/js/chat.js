@@ -78,7 +78,8 @@ document.querySelector('#startcall').addEventListener('click' , () => {
         alert('getUserMedia() error: ' + e.name);
       });
 })
-$("#ringModal").on('shown.bs.modal', function(){
+
+$(document).on('shown.bs.modal','#ringModal', function(){
     console.log("Came Inside")
     document.querySelector('#joinCall').addEventListener('click' , () => {
         navigator.mediaDevices.getUserMedia({
@@ -366,6 +367,6 @@ socket.on('created', function(room) {
       ring();
       $("#ringModal").modal();
   })
-  $("#ringModal").on('hide.bs.modal', function(){
+$(document).on('hide.bs.modal','#ringModal', function () {
     ringstop();
-  });
+})
