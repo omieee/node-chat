@@ -61,6 +61,7 @@ document.querySelector('#startcall').addEventListener('click' , () => {
         video: true
       })
       .then(gotStream)
+      .then(socket.emit('create_or_join', room))
       .catch(function(e) {
         alert('getUserMedia() error: ' + e.name);
       });
@@ -302,12 +303,12 @@ socket.emit('join', { username, roomname }, (error) => {
 /*
 FOR CALL EVENTS
 */
-if (room !== '') {
-    socket.emit('create_or_join', room);
-    console.log('Attempted to create or  join room', room);
-} else {
-    console.log("room", room)
-}
+// if (room !== '') {
+//     socket.emit('create_or_join', room);
+//     console.log('Attempted to create or  join room', room);
+// } else {
+//     console.log("room", room)
+// }
   
 socket.on('created', function(room) {
     console.log('Created room ' + room);
