@@ -67,7 +67,18 @@ function ringstop() {
     snd.currentTime = 0;
 }
 
-document.querySelectorAll('#startcall', '#joinCall').addEventListener('click' , () => {
+document.querySelector('#startcall').addEventListener('click' , () => {
+    navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: true
+      })
+      .then(gotStream)
+      .then(socket.emit('create_or_join', room))
+      .catch(function(e) {
+        alert('getUserMedia() error: ' + e.name);
+      });
+})
+document.querySelector('#joinCall').addEventListener('click' , () => {
     navigator.mediaDevices.getUserMedia({
         audio: true,
         video: true
