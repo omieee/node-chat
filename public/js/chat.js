@@ -96,8 +96,7 @@ $(document).on('shown.bs.modal','#ringModal', function(){
     })
 
     document.querySelector('#rejectCall').addEventListener('click', () => {
-        ringstop();
-        $('#ringModal').close()
+        $('#ringModal').modal('hide')
     })
 });
 
