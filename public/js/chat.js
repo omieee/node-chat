@@ -78,17 +78,19 @@ document.querySelector('#startcall').addEventListener('click' , () => {
         alert('getUserMedia() error: ' + e.name);
       });
 })
-document.querySelector('#joinCall').addEventListener('click' , () => {
-    navigator.mediaDevices.getUserMedia({
-        audio: true,
-        video: true
-      })
-      .then(gotStream)
-      .then(socket.emit('create_or_join', room))
-      .catch(function(e) {
-        alert('getUserMedia() error: ' + e.name);
-      });
-})
+$("#ringModal").on('shown.bs.modal', function(){
+    document.querySelector('#joinCall').addEventListener('click' , () => {
+        navigator.mediaDevices.getUserMedia({
+            audio: true,
+            video: true
+          })
+          .then(gotStream)
+          .then(socket.emit('create_or_join', room))
+          .catch(function(e) {
+            alert('getUserMedia() error: ' + e.name);
+          });
+    })
+});
 
 
 function maybeStart() {
