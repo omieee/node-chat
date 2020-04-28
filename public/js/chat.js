@@ -49,6 +49,8 @@ function gotStream(stream) {
     console.log('Adding local stream.');
     localStream = stream;
     localVideo.srcObject = stream;
+    localVideo.muted = false;
+    localVideo.volume = 0
     //sendMessage('got user media');
     if (isInitiator) {
         maybeStart();
