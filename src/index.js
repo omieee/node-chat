@@ -25,7 +25,7 @@ io.on('connection', (socket) => {
         if (error) {
             return callback(error)
         }
-        socket.join(user.roomname)
+        //socket.join(user.roomname)
         //Registering events
         /*
         This one will go to only that user
