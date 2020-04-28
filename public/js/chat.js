@@ -11,6 +11,7 @@ $sidebar_template = document.querySelector('#sidebar-template').innerHTML
 
 //Query String parse
 const { username, roomname } = Qs.parse(location.search, { ignoreQueryPrefix: true })
+const snd = new Audio("/audio/ring.wav");  
 
 var isChannelReady = true;
 var isInitiator = true;
@@ -58,8 +59,12 @@ function gotStream(stream) {
 }
 
 function ring() {
-    var snd = new Audio("/audio/ring.wav");  
     snd.play();
+}
+
+function ringstop() {
+    snd.pause();
+    snd.currentTime = 0;
 }
 
 document.querySelector('#startcall').addEventListener('click' , () => {
@@ -152,6 +157,7 @@ function onCreateSessionDescriptionError(error) {
 }
 
 function handleRemoteStreamAdded(event) {
+    ringstop();
     console.log('Remote stream added.');
     remoteStream = event.stream;
     remoteVideo.srcObject = remoteStream;
@@ -174,6 +180,7 @@ function handleRemoteHangup() {
 }
 
 function stop() {
+
     isStarted = false;
     pc.close();
     pc = null;
