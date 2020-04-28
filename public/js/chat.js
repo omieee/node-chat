@@ -305,7 +305,9 @@ FOR CALL EVENTS
 if (room !== '') {
     socket.emit('create or join', room);
     console.log('Attempted to create or  join room', room);
-  }
+} else {
+    console.log("room", room)
+}
   
 socket.on('created', function(room) {
     console.log('Created room ' + room);
