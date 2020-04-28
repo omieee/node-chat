@@ -104,6 +104,7 @@ io.on('connection', (socket) => {
         }
       });
       socket.on('call-initiated', () => {
+        const user = getUser(socket.id)
         socket.broadcast.to(user.roomname).emit('ring')
       })
 
