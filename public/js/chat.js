@@ -221,11 +221,11 @@ socket.on('message-back', function(message) {
     } else if (message.type === 'offer') {
       if (!isInitiator && !isStarted) {
         maybeStart();
+        beep();
       }
       pc.setRemoteDescription(new RTCSessionDescription(message))
       doAnswer()
     } else if (message.type === 'answer' && isStarted) {
-        beep()
       pc.setRemoteDescription(new RTCSessionDescription(message));
     } else if (message.type === 'candidate' && isStarted) {
       var candidate = new RTCIceCandidate({
