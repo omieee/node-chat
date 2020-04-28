@@ -57,7 +57,7 @@ function gotStream(stream) {
     }
 }
 
-function beep() {
+function ring() {
     var snd = new Audio("/audio/ring.wav");  
     snd.play();
 }
@@ -85,6 +85,7 @@ function maybeStart() {
         console.log('isInitiator', isInitiator);
         if (isInitiator) {
             doCall();
+            socket.emit('call-initiated')
         }
     }
 }
@@ -320,7 +321,6 @@ FOR CALL EVENTS
 socket.on('created', function(room) {
     console.log('Created room ' + room);
     isInitiator = true;
-    beep();
   });
   
   socket.on('full', function(room) {
@@ -341,3 +341,6 @@ socket.on('created', function(room) {
   socket.on('log', function(array) {
     console.log.apply(console, array);
   });
+  socket.on('ring', () => {
+      ring();
+  })

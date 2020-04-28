@@ -103,6 +103,9 @@ io.on('connection', (socket) => {
           });
         }
       });
+      socket.on('call-initiated', () => {
+        socket.broadcast.to(user.roomname).emit('ring')
+      })
 
     /*
     *On the user whe he / she disconnects
