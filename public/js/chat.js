@@ -80,7 +80,6 @@ document.querySelector('#startcall').addEventListener('click' , () => {
 })
 
 $(document).on('shown.bs.modal','#ringModal', function(){
-    console.log("Came Inside")
     document.querySelector('#joinCall').addEventListener('click' , () => {
         navigator.mediaDevices.getUserMedia({
             audio: true,
@@ -91,6 +90,11 @@ $(document).on('shown.bs.modal','#ringModal', function(){
           .catch(function(e) {
             alert('getUserMedia() error: ' + e.name);
           });
+    })
+
+    document.querySelector('#rejectCall').addEventListener('click', () => {
+        ringstop();
+        $('#ringModal').close()
     })
 });
 
@@ -370,3 +374,4 @@ socket.on('created', function(room) {
 $(document).on('hide.bs.modal','#ringModal', function () {
     ringstop();
 })
+rejectCall
