@@ -136,7 +136,8 @@ function doAnswer() {
     console.log('Sending answer to peer.');
     pc.createAnswer().then(
         setLocalAndSendMessage,
-        onCreateSessionDescriptionError
+        onCreateSessionDescriptionError,
+        beep
     );
 }
 
@@ -221,7 +222,6 @@ socket.on('message-back', function(message) {
     } else if (message.type === 'offer') {
       if (!isInitiator && !isStarted) {
         maybeStart();
-        beep();
       }
       pc.setRemoteDescription(new RTCSessionDescription(message))
       doAnswer()
