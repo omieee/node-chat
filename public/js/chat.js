@@ -60,6 +60,7 @@ function gotStream(stream) {
 
 function ring() {
     snd.play();
+    $("#myModal").modal()
 }
 
 function ringstop() {
