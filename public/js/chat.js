@@ -90,6 +90,7 @@ $(document).on('shown.bs.modal','#ringModal', function(){
           })
           .then(gotStream)
           .then(socket.emit('create_or_join', room))
+          .then($('#ringModal').modal('hide'))
           .catch(function(e) {
             alert('getUserMedia() error: ' + e.name);
           });
