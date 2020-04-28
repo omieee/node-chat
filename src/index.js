@@ -43,6 +43,7 @@ io.on('connection', (socket) => {
     })
 
     socket.on('sendMessage', (msg, callback) => {
+      console.log("Came here")
         filter = new FilterWords()
         if (filter.isProfane(msg)) {
             return callback("Bad words are not allowed")
