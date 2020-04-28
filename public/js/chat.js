@@ -137,7 +137,6 @@ function doAnswer() {
     pc.createAnswer().then(
         setLocalAndSendMessage,
         onCreateSessionDescriptionError,
-        beep
     );
 }
 
@@ -153,6 +152,7 @@ function onCreateSessionDescriptionError(error) {
 
 function handleRemoteStreamAdded(event) {
     console.log('Remote stream added.');
+    beep();
     remoteStream = event.stream;
     remoteVideo.srcObject = remoteStream;
 }
