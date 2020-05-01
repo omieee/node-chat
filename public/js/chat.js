@@ -11,7 +11,7 @@ $sidebar_template = document.querySelector('#sidebar-template').innerHTML
 
 //Query String parse
 const { username, roomname } = Qs.parse(location.search, { ignoreQueryPrefix: true })
-const snd = new Audio("/audio/ring.wav");  
+const snd = new Audio("/audio/ring.wav");
 
 var isChannelReady = true;
 var isInitiator = true;
@@ -24,16 +24,16 @@ var room = roomname;
 
 var pcConfig = {
     'iceServers': [
-      {
-        'urls': 'stun:stun.l.google.com:19302'
-      },
-      {
-        'urls': 'turn:turn.twicahut.com:3478?transport=tcp',
-        'credential': 'itunes_01',
-        'username': 'omieee'
-      }
+        {
+            'urls': 'stun:stun.l.google.com:19302'
+        },
+        {
+            'urls': 'turn:turn.twicahut.com:3478?transport=tcp',
+            'credential': 'itunes_01',
+            'username': 'omieee'
+        }
     ]
-  }
+}
 
 // Set up audio and video regardless of what devices are present.
 var sdpConstraints = {
@@ -42,9 +42,8 @@ var sdpConstraints = {
 };
 
 /////////////////////////////////////////////
-
-var localVideo = document.querySelector('#localVideo');
-var remoteVideo = document.querySelector('#remoteVideo');;
+var localVideo = undefined
+var remoteVideo = undefined
 
 function gotStream(stream) {
     console.log('Adding local stream.');
@@ -63,44 +62,77 @@ function ring() {
 }
 
 function ringstop() {
-    try{
+    try {
         snd.pause();
         snd.currentTime = 0;
     }
-    catch {}
+    catch { }
 }
 
-document.querySelector('#startcall').addEventListener('click' , () => {
-    navigator.mediaDevices.getUserMedia({
-        audio: true,
-        video: true
-      })
-      .then(gotStream)
-      .then(socket.emit('create_or_join', room))
-      .catch(function(e) {
-        alert('getUserMedia() error: ' + e.name);
-      });
+function resizeScreens() {
+    // document.getElementById("localVideo").width = "320";
+    // document.getElementById("localVideo").height = "180";
+    // document.getElementById("localVideo").style.right = "100%"; 
+    // document.getElementById("localVideo").style.top = "10px"; 
+    // document.getElementById("localVideo").style.marginRight= "10px";
+}
+var qvgaConstraints = {
+    audio: true,
+    video: {
+        mandatory: {
+            maxWidth: 320,
+            maxHeight: 180
+        }
+    }
+};
+
+var vgaConstraints = {
+    audio: true,
+    video: {
+        mandatory: {
+            maxWidth: 640,
+            maxHeight: 360
+        }
+    }
+};
+
+var hdConstraints = {
+    audio: true,
+    video: {
+        mandatory: {
+            minWidth: 1280,
+            minHeight: 720
+        }
+    }
+};
+function getMedia(constraints) {
+    if (window.stream) {
+        video.src = null;
+        window.stream.getVideoTracks()[0].stop();
+    }
+    navigator.mediaDevices.getUserMedia(
+        constraints
+    ).then(gotStream)
+        .then(socket.emit('create_or_join', room))
+        .catch(function (e) {
+            alert('getUserMedia() error: ' + e.toString());
+        });
+}
+$(document).on('shown.bs.modal', '#callModal', function () {
+    localVideo = document.querySelector('#localVideo');
+    remoteVideo = document.querySelector('#remoteVideo');
+    getMedia(hdConstraints)
 })
 
-$(document).on('shown.bs.modal','#ringModal', function(){
-    document.querySelector('#joinCall').addEventListener('click' , () => {
-        navigator.mediaDevices.getUserMedia({
-            audio: true,
-            video: true
-          })
-          .then(gotStream)
-          .then(socket.emit('create_or_join', room))
-          .then($('#ringModal').modal('hide'))
-          .catch(function(e) {
-            alert('getUserMedia() error: ' + e.name);
-          });
+$(document).on('shown.bs.modal', '#ringModal', function () {
+    document.querySelector('#joinCall').addEventListener('click', () => {
+        $("#ringModal").modal("hide");
     })
 
     document.querySelector('#rejectCall').addEventListener('click', () => {
         $('#ringModal').modal('hide')
     })
 });
-
 
 function maybeStart() {
     console.log('>>>>>>> maybeStart() ', isStarted, localStream, isChannelReady);
@@ -183,6 +215,7 @@ function handleRemoteStreamAdded(event) {
     console.log('Remote stream added.');
     remoteStream = event.stream;
     remoteVideo.srcObject = remoteStream;
+    resizeScreens();
 }
 
 function handleRemoteStreamRemoved(event) {
@@ -244,28 +277,28 @@ function sendMessage(message) {
 }
 
 // This client receives a message
-socket.on('message-back', function(message) {
+socket.on('message-back', function (message) {
     console.log('Client received message:', message);
     if (message === 'got user media') {
-      maybeStart();
-    } else if (message.type === 'offer') {
-      if (!isInitiator && !isStarted) {
         maybeStart();
-      }
-      pc.setRemoteDescription(new RTCSessionDescription(message))
-      doAnswer()
+    } else if (message.type === 'offer') {
+        if (!isInitiator && !isStarted) {
+            maybeStart();
+        }
+        pc.setRemoteDescription(new RTCSessionDescription(message))
+        doAnswer()
     } else if (message.type === 'answer' && isStarted) {
-      pc.setRemoteDescription(new RTCSessionDescription(message));
+        pc.setRemoteDescription(new RTCSessionDescription(message));
     } else if (message.type === 'candidate' && isStarted) {
-      var candidate = new RTCIceCandidate({
-        sdpMLineIndex: message.label,
-        candidate: message.candidate
-      });
-      pc.addIceCandidate(candidate);
+        var candidate = new RTCIceCandidate({
+            sdpMLineIndex: message.label,
+            candidate: message.candidate
+        });
+        pc.addIceCandidate(candidate);
     } else if (message === 'bye' && isStarted) {
-      handleRemoteHangup();
+        handleRemoteHangup();
     }
-  });
+});
 
 
 socket.on('message', (message) => {
@@ -346,34 +379,43 @@ FOR CALL EVENTS
 // } else {
 //     console.log("room", room)
 // }
-  
-socket.on('created', function(room) {
+
+socket.on('created', function (room) {
     console.log('Created room ' + room);
     isInitiator = true;
-  });
-  
-  socket.on('full', function(room) {
+});
+
+socket.on('full', function (room) {
     console.log('Room ' + room + ' is full');
-  });
-  
-  socket.on('join', function (room){
+});
+
+socket.on('join', function (room) {
     console.log('Another peer made a request to join room ' + room);
     console.log('This peer is the initiator of room ' + room + '!');
     isChannelReady = true;
-  });
-  
-  socket.on('joined', function(room) {
+});
+
+socket.on('joined', function (room) {
     console.log('joined: ' + room);
     isChannelReady = true;
-  });
-  
-  socket.on('log', function(array) {
+});
+
+socket.on('log', function (array) {
     console.log.apply(console, array);
-  });
-  socket.on('ring', () => {
-      ring();
-      $("#ringModal").modal();
-  })
-$(document).on('hide.bs.modal','#ringModal', function () {
+});
+socket.on('ring', () => {
+    ring();
+    $("#ringModal").modal();
+})
+$(document).on('hide.bs.modal', '#ringModal', function (e) {
     ringstop();
+    console.log(e.relatedTarget)
+    var rejectcall = $(e.relatedTarget).is("#rejectCall");
+    console.log("reject", rejectcall)
+    if(rejectcall === true) {
+        console.log("true")
+    } else {
+        console.log("false")
+        $("#callModal").modal();
+    };
 })

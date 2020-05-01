@@ -21,15 +21,14 @@
           <button id="sendmessage">Send</button>
         </form>
         <button id="sendlocation">Send Your Location</button>&nbsp;&nbsp;&nbsp;
-        <button id="startcall" class="btn btn-primary">Start Video Call</button>
+        <button id="startcall" class="btn btn-primary" data-toggle="modal" data-target="#callModal">Start Video Call</button>
       </div>
     </div>
     <div class="right__chat__sidebar">
-      <video id="localVideo" autoplay playsinline></video>
-      <video id="remoteVideo" autoplay playsinline></video>
+      <!-- <video id="localVideo" autoplay playsinline></video>
+      <video id="remoteVideo" autoplay playsinline></video> -->
     </div>
   </div>
-
 
   <script id="message-template" type="text/html">
         <div class="message">
@@ -73,6 +72,8 @@
 
   <!-- Latest compiled JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+  <script src="https://kit.fontawesome.com/7bcbf31f14.js" crossorigin="anonymous"></script>
   <script src="/js/chat.js"></script>
   <div class="modal" tabindex="-1" role="dialog" id="ringModal">
     <div class="modal-dialog" role="document">
@@ -86,6 +87,40 @@
         <div class="modal-body">
           <button id="joinCall" class="btn btn-primary float-left">Accept</button>
           <button id="rejectCall" class="btn btn-danger float-right">Reject</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal" tabindex="-1" role="dialog" id="callModal">
+    <div class="modal-dialog modal-xl modal-full" role="document">
+      <div class="modal-content">
+        <!-- <div class="modal-header">
+          <h5 class="modal-title">Call</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div> -->
+        <div class="modal-body p-0">
+          <div class="container p-0">
+            <div class="row no-gutters">
+              <div class="col-12 p-0 m-0">
+                <video id="remoteVideo" autoplay playsinline></video>
+                <video id="localVideo" class="right-video" autoplay playsinline></video>
+                <div class="d-flex align-items-center flex-column actionControls">
+                  <div class="mt-auto p-4">
+                    <button onclick="hangup()"><i class="fas fa-phone-slash"></i></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row no-gutters">
+              <div class="col-2 p-0 m-0">
+                  
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
