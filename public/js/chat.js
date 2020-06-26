@@ -14,7 +14,7 @@ const { username, roomname } = Qs.parse(location.search, { ignoreQueryPrefix: tr
 const snd = new Audio("/audio/ring.wav");
 
 var isChannelReady = true;
-var isInitiator = true;
+var isInitiator = false;
 var isStarted = false;
 var localStream;
 var pc;
@@ -134,6 +134,7 @@ $(document).on('shown.bs.modal', '#ringModal', function () {
     })
 });
 
+
 function maybeStart() {
     console.log('>>>>>>> maybeStart() ', isStarted, localStream, isChannelReady);
     if (!isStarted && typeof localStream !== 'undefined' && isChannelReady) {
@@ -144,6 +145,7 @@ function maybeStart() {
         console.log('isInitiator', isInitiator);
         if (isInitiator) {
             doCall();
+            console.log("Came Inside It Should Call")
             socket.emit('call-initiated')
         }
     }
@@ -220,22 +222,24 @@ function handleRemoteStreamAdded(event) {
 
 function handleRemoteStreamRemoved(event) {
     console.log('Remote stream removed. Event: ', event);
+    hangup();
 }
 
 function hangup() {
     console.log('Hanging up.');
     stop();
     sendMessage('bye');
+    $('#callModal').modal('hide')
 }
 
 function handleRemoteHangup() {
     console.log('Session terminated.');
     stop();
     isInitiator = false;
+    $('#callModal').modal('hide')
 }
 
 function stop() {
-
     isStarted = false;
     pc.close();
     pc = null;
@@ -380,14 +384,16 @@ FOR CALL EVENTS
 //     console.log("room", room)
 // }
 
-socket.on('created', function (room) {
-    console.log('Created room ' + room);
-    isInitiator = true;
-});
+// socket.on('created', function (room) {
+//     console.log('Created room ' + room);
+//     isInitiator = true;
+// });
 
-socket.on('full', function (room) {
-    console.log('Room ' + room + ' is full');
-});
+socket.on('init-call', () => {
+    console.log("Initiator Started The Call")
+    isInitiator = true;
+})
+
 
 socket.on('join', function (room) {
     console.log('Another peer made a request to join room ' + room);
@@ -418,4 +424,9 @@ $(document).on('hide.bs.modal', '#ringModal', function (e) {
         console.log("false")
         $("#callModal").modal();
     };
+})
+
+document.querySelector('#startcall').addEventListener('click', () => {
+    socket.emit('initiate-call')
+    isInitiator = true
 })
